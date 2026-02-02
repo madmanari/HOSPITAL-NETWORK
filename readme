@@ -20,7 +20,6 @@ This repository contains the complete network design for a hospital environment 
 - Inter-VLAN Routing
 - Firewall-based Segmentation
 
-Refer to the `/docs` folder for detailed design documentation.
 
 
 📘 Network-overview
