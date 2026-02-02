@@ -1,0 +1,128 @@
+📄 Hospital Network Design
+
+This repository contains the complete network design for a hospital environment with:
+- 60 PCs
+- 100 CCTV cameras
+- 20 Printers
+- 20 Wi-Fi Access Points
+
+## Design Highlights
+- Floor-wise VLAN segmentation
+- One managed core switch
+- Mostly unmanaged PoE access switches
+- Secure CCTV and Guest Wi-Fi isolation
+- Scalable and cost-effective architecture
+
+
+## Technologies
+- VLAN (IEEE 802.1Q)
+- PoE Switching
+- Inter-VLAN Routing
+- Firewall-based Segmentation
+
+Refer to the `/docs` folder for detailed design documentation.
+
+
+📘 Network-overview
+
+
+The hospital network uses a star topology with a centralized managed switch acting as
+the core/distribution layer.
+
+### Key Principles
+- VLAN separation by floor and function
+- Minimal management overhead
+- High availability for CCTV and clinical systems
+- Secure guest access
+
+### Core Components
+- Managed L2/L3 Switch
+- Firewall / Router
+- Unmanaged PoE Access Switches
+
+
+
+🧠 Vlan-design
+
+| VLAN ID | Name | Purpose |
+|-------|------|---------|
+| 10 | FLOOR1 | PCs & Printers |
+| 20 | FLOOR2 | PCs & Printers |
+| 30 | FLOOR3 | PCs & Printers |
+| 40 | FLOOR4 | PCs & Printers |
+| 50 | CCTV | All Cameras |
+| 60 | WIFI_STAFF | Secure Staff Wi-Fi |
+| 70 | WIFI_GUEST | Guest Internet Only |
+| 99 | MGMT | Network Management |
+
+All VLANs terminate on the core managed switch.
+
+
+
+🌐 Ip-addressing
+
+| VLAN | Subnet | Gateway |
+|----|--------|---------|
+| 10 | 192.168.10.0/24 | 192.168.10.1 |
+| 20 | 192.168.20.0/24 | 192.168.20.1 |
+| 30 | 192.168.30.0/24 | 192.168.30.1 |
+| 40 | 192.168.40.0/24 | 192.168.40.1 |
+| 50 | 192.168.50.0/24 | 192.168.50.1 |
+| 60 | 192.168.60.0/24 | 192.168.60.1 |
+| 70 | 192.168.70.0/24 | 192.168.70.1 |
+| 99 | 192.168.99.0/24 | 192.168.99.1 |
+
+
+
+
+🔐 Security-policy
+
+### Allowed
+- Staff Wi-Fi → Internal Resources
+- PCs → Printers
+- CCTV → NVR
+- Management VLAN → All devices
+
+### Denied
+- Guest Wi-Fi → Internal Network
+- CCTV → Internet
+- Guest Wi-Fi → Printers/CCTV
+
+Firewall enforces all inter-VLAN access.
+
+
+⚙️ configs/core-switch/vlan-config
+vlan 10 name FLOOR1
+vlan 20 name FLOOR2
+vlan 30 name FLOOR3
+vlan 40 name FLOOR4
+vlan 50 name CCTV
+vlan 60 name WIFI_STAFF
+vlan 70 name WIFI_GUEST
+vlan 99 name MGMT
+
+
+
+
+📶 configs/wifi/ssid-vlan-mapping
+SSID: Hospital-Staff
+VLAN: 60
+Security: WPA2/WPA3-Enterprise
+
+SSID: Hospital-Guest
+VLAN: 70
+Security: Captive Portal
+Client Isolation: Enabled
+
+
+
+
+🧾 implementation/installation-checklist
+
+- [ ] Rack core switch and firewall
+- [ ] Label all floor uplinks
+- [ ] Configure VLANs on core switch
+- [ ] Verify inter-VLAN routing
+- [ ] Test Guest Wi-Fi isolation
+- [ ] Test CCTV recording
+- [ ] Backup configurations
